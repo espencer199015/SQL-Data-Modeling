@@ -7,35 +7,53 @@ CREATE DATABASE craiglist;
 CREATE TABLE posts
 (
     post_id SERIAL PRIMARY KEY,
-    region_name TEXT NOT NULL,
-    preferred_region TEXT NOT NULL,
-    users INT,
-    categories TEXT NOT NULL
-);
-
-CREATE TABLE post_details
-(
-    post_id SERIAL PRIMARY KEY,
-    post_user TEXT NOT NULL,
-    title TEXT NOT NULL,
+    post_title TEXT NOT NULL,
     post_text TEXT NOT NULL,
     post_location TEXT NOT NULL,
-    post_region TEXT NOT NULL
+    Foreign Key (user_id) References users(id),
+    Foreign Key (region_id) References regions(id),
+    Foreign Key (category_id) References categories(id)
+);
+
+CREATE TABLE users
+(
+  user_id SERIAL PRIMARY KEY,
+  username TEXT NOT NULL,
+  encrypted_password TEXT NOT NULL,
+  Foreign Key (preferred_region_id) References regions(id)
+);
+
+CREATE TABLE regions
+(
+  region_id SERIAL PRIMARY KEY,
+  region_name TEXT NOT NULL
+);
+
+CREATE categories
+(
+  category_id SERIAL PRIMARY KEY,
+  category_name TEXT NOT NULL
 );
 
 INSERT INTO posts
-(post_id, region_name, preferred_region, users, categories)
+(post_id, post_name, post_text, post_location, user_id, region_id, category_id)
 VALUES
-  ('1', 'Central US', 'Central US, All Regions', '100', 'farming, gardening, country living'),
-  ('2', 'South US', 'Eastern Seaboard, Western Seaboard', '300', 'surfing, beach, water sports'),
-  ('3', 'North US', 'North US', '28', 'moose, wildlife, woodland animals');
+  ('1', 'Best Icecream Shop Around!', 'There is a great icecream shop 
+  on this little island that is a must stop for tourists! 
+  They have so many varieties and all homemade!', 
+  'Chincoteague Island, Virginia', '209', '4', '101');
 
-INSERT INTO post_details
-  (post_id, post_user, title, post_text, post_location, post_region)
+INSERT INTO users
+(user_id, username, encrypted_password, preferred_region_id)
 VALUES
-  ('1', 'farmerGirl33', 'How to make raised garden boxes', 'Over the weekend I made my very first garden box. It was super simple. Check my pics to see how I did it step by step. Happy Gardening!',
-  'Idaho', 'Central US'),
-  ('2', 'surferDude101', 'Killer rip out on the surf', 'YO! Crazy surf day out on the banks! My bros and I got caught in a rip, but we caught a gnarly wave about a mile from a starting point. Surfing Outer Banks Style!',
-  'South Carolina', 'South US'),
-  ('3', 'midlifeMomAdventurer', 'Moose Sighting', 'Just caught a glimpse of our beautiful wildlife this evening! A moose and her young made an appearance during our group hike. What a time to be alive!',
-  'North Dakota', 'North US');
+  ('209', 'HappyTraveler90', 'highTide6143', '4');
+
+INSERT INTO regions
+(region_id, region_name)
+VALUES
+  ('4', 'East Coast, USA');
+
+INSERT INTO categories
+(category_id, category_name)
+VALUES
+  ('101', 'Food/Desserts');
